@@ -1,11 +1,20 @@
 class EventsController < ApplicationController
   include JsonWebToken
   skip_before_action :authenticate_request
-  before_action :authorize_hr, only: [:create, :index, :destroy]
+  before_action :authorize_hr, only: [:create, :destroy, :update]
 
   def index
     events = Event.all
     render json: events
+  end
+
+  def show
+    event = Event.find_by(id: params[:id])
+    if event.nil?
+      render json: { message: "Event not found" }
+    else
+      render json: event
+    end
   end
   
   def create
@@ -18,9 +27,24 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    event = Event.find(params[:id])
-    event.destroy
-    render json: { message: 'Event deleted successfully' }
+    event = Event.find_by(id: params[:id])
+    if event.nil?
+      render json: { message: "Event id not found" }
+    else
+      event.destroy
+      render json: { message: 'Event deleted successfully' }
+    end
+  end
+
+  def update
+    event = Event.find_by(id: params[:id])
+    if event.nil?
+      render json: { message: "Id not found" }
+    elsif event.update(event_params)
+      render json: event
+    else
+      render json: { errors: event.errors.full_messages }, status: :unprocessable_entity
+    end
   end
   
     private
@@ -32,7 +56,7 @@ class EventsController < ApplicationController
   end
   
   def event_params
-    params.permit(:name, :date)
+    params.permit( :id, :name, :date )
   end
 end
   

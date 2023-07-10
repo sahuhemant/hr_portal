@@ -7,6 +7,15 @@ class EmployeesController < ApplicationController
     employees = User.all
     render json: employees
   end
+
+  def show
+    employee = User.find_by(id: params[:id])
+    if employee.nil?
+      render json: { message: "employee not found" }
+    else
+      render json: employee
+    end
+  end
   
   def create
     employee = User.new(employee_params)
@@ -18,10 +27,26 @@ class EmployeesController < ApplicationController
   end
 
   def destroy
-    employee = User.find(params[:id])
-    employee.destroy
-    render json: { message: 'Employee deleted successfully' }
+    employee = User.find_by(id: params[:id])
+    if employee.nil?
+      render json: { message: "Id not found" }
+    else
+      employee.destroy
+      render json: { message: 'Employee deleted successfully' }
+    end
   end
+
+  def update
+    employee = User.find_by(id: params[:id])
+    if employee.nil?
+      render json: { message: "Id not found" }
+    elsif employee.update(employee_params)
+      render json: employee
+    else
+      render json: { errors: employee.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
 
   private
   
@@ -32,7 +57,7 @@ class EmployeesController < ApplicationController
   end
   
   def employee_params
-    params.permit(:name, :password, :joining_date, :salary_alloted, :profile_picture)
+    params.permit( :id, :fullname, :username, :password, :joining_date, :salary_alloted, :profile_picture, :email )
   end
 end
   
