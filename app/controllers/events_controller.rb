@@ -4,8 +4,7 @@ class EventsController < ApplicationController
   before_action :authorize_hr, only: [:create, :destroy, :update]
 
   def index
-    events = Event.all
-    render json: events
+    render json: Event.all
   end
 
   def show

@@ -4,8 +4,7 @@ class EmployeesController < ApplicationController
   before_action :authorize_hr
   
   def index
-    employees = User.all
-    render json: employees
+    render json: User.all
   end
 
   def show
