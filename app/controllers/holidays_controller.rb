@@ -5,5 +5,5 @@ class HolidaysController < ApplicationController
     holidays = Holiday.all
     render json: holidays
   end
-      
+
 end

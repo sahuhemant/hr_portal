@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :leaves
   has_secure_password
   validates :fullname, presence: true
   validates :username, presence: true, uniqueness: true

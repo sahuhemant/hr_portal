@@ -5,5 +5,7 @@ Rails.application.routes.draw do
   resources :holidays, only: [:index]
   resources :events, only: [:create, :index, :destroy, :update, :show]
   get '/users/me', to: 'users#show'
+  post '/logout', to: 'users#logout'
+  post '/users/apply_leave', to: 'users#apply_leave'
 
 end
