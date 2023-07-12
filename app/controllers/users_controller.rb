@@ -7,12 +7,7 @@ class UsersController < ApplicationController
     user = @current_user
     render json: user.leaves
   end
-  
-
-  def logout
-    render json: { message: 'Logged out successfully' }
-  end
-
+ 
   def apply_leave
     start_date = params[:start_date]
     end_date = params[:end_date]
@@ -22,6 +17,7 @@ class UsersController < ApplicationController
       render json: { error: 'Please enter start and end dates' }, status: :unprocessable_entity
       return
     end
+
   
     begin
       start_date = Date.parse(start_date)

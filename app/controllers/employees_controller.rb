@@ -2,22 +2,30 @@ class EmployeesController < ApplicationController
   include JsonWebToken
   skip_before_action :authenticate_request
   before_action :authorize_hr
+  before_action :set_params, only: [:show, :destroy, :update]
   
   def index
-    render json: User.all
+    employees = User.all.map do |i|
+      {
+        user_id: i.id,
+        Fullname: i.fullname,
+        username: i.username,
+        Email: i.email,
+        joining_date: i.joining_date,
+        salary_alloted: i.salary_alloted,
+        profile_picture: i.profile_picture.url
+      }
+    end
+    render json: employees, status: :ok
   end
 
   def show
-    employee = User.find_by(id: params[:id])
-    if employee.nil?
-      render json: { message: "employee not found" }
-    else
-      render json: employee
-    end
+    render json: @employee, status: :ok
   end
   
   def create
     employee = User.new(employee_params)
+    employee.profile_picture.attach(params[:profile_picture])
     if employee.save
       render json: employee, status: :created
     else
@@ -26,23 +34,15 @@ class EmployeesController < ApplicationController
   end
 
   def destroy
-    employee = User.find_by(id: params[:id])
-    if employee.nil?
-      render json: { message: "Id not found" }
-    else
-      employee.destroy
-      render json: { message: 'Employee deleted successfully' }
-    end
+    @employee.destroy
+    render json: { message: 'Employee deleted successfully' }
   end
 
   def update
-    employee = User.find_by(id: params[:id])
-    if employee.nil?
-      render json: { message: "Id not found" }
-    elsif employee.update(employee_params)
-      render json: employee
+   if @employee.update(employee_params)
+      render json: @employee
     else
-      render json: { errors: employee.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @employee.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -56,7 +56,12 @@ class EmployeesController < ApplicationController
   end
   
   def employee_params
-    params.permit( :id, :fullname, :username, :password, :joining_date, :salary_alloted, :profile_picture, :email )
+    params.permit( :id, :fullname, :username, :password, :joining_date, :salary_alloted,  :email )
+  end
+
+  def set_params
+    @employee = User.find_by(id: params[:id])
+    render json: { message: "employee not found" }, status: :not_found if @employee.nil?
   end
 end
   

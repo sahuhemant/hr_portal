@@ -1,9 +1,12 @@
 class ApplicationController < ActionController::API
   include JsonWebToken
   before_action :authenticate_request
-  
+  before_action do
+    ActiveStorage::Current.url_options = { protocol: request.protocol, host: request.host, port: request.port }
+  end
+ 
   private
-  
+
   def authenticate_request
     authorization_header = request.headers['Authorization']
     token = authorization_header.split(' ').last if authorization_header.present?
@@ -12,7 +15,6 @@ class ApplicationController < ActionController::API
       render json: { error: 'Unauthorized' }, status: :unauthorized
       return
     end
-
     @current_user = User.find_by(id: decoded_token['user_id'])
     unless @current_user
       render json: { error: 'User not found' }, status: :unauthorized
@@ -20,4 +22,3 @@ class ApplicationController < ActionController::API
     end
   end
 end
-  
