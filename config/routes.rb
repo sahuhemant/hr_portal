@@ -7,5 +7,7 @@ Rails.application.routes.draw do
   get '/users/me', to: 'users#show'
   post '/logout', to: 'users#logout'
   post '/users/apply_leave', to: 'users#apply_leave'
+  get  '/users/leave_status', to: 'users#leave_status'
+  resources :leaves, only: [:index, :show, :update]
 
 end
