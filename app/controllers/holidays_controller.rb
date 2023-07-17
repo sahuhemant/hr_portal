@@ -4,6 +4,8 @@ class HolidaysController < ApplicationController
   before_action :authorize_hr, only: [:create, :destroy, :update]
   before_action :set_params, only: [:show, :destroy, :update]
 
+  # Hr Working 
+
   def index
     render json: Holiday.all
   end
@@ -35,12 +37,7 @@ class HolidaysController < ApplicationController
   end
   
   private
-  
-  def authorize_hr
-    token = request.headers['Authorization'].to_s.split(' ').last
-    payload = decode(token)
-    render json: { error: 'Unauthorized' }, status: :unauthorized unless payload && payload['user_id'] == 'hr'
-  end
+
   
   def holiday_params
     params.permit( :id, :name, :date )

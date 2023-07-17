@@ -1,21 +1,25 @@
 class AuthenticationsController < ApplicationController
   include JsonWebToken
-  skip_before_action :authenticate_request, only: [:login, :create]
+  skip_before_action :authenticate_request
+  skip_before_action :authorize_hr
+
+  # Login for Both Hr and Employee
 
   def login
-    if params[:username] == 'hr' && params[:password] == 'hr123'
-      token = encode(user_id: 'hr')
-      render json: { token: token, message: 'HR login successfully' }
-    else
-      user = User.find_by(username: params[:username])
+    user = User.find_by(username: params[:username])
     
-      if user && user.authenticate(params[:password])
-        token = encode(user_id: user.id)
-        render json: { token: token, message: 'Developer login successfully' }
+    if user&.authenticate(params[:password])
+      type = user.type 
+      
+      if type == 'Hr'
+        token = encode(user_id: user.id, type: type)
+        render json: { token: token, message: 'HR login successful' }
       else
-        render json: { error: 'Invalid username or password' }, status: :unauthorized
+        token = encode(user_id: user.id, type: type)
+        render json: { token: token, message: 'Developer login successful' }
       end
+    else
+      render json: { error: 'Invalid name or password' }, status: :unauthorized
     end
   end
-  
-end  
+end

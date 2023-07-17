@@ -4,6 +4,9 @@ class EventsController < ApplicationController
   before_action :authorize_hr, only: [:create, :destroy, :update]
   before_action :set_params, only: [:show, :destroy, :update]
 
+  # Hr Working 
+
+
   def index
     render json: Event.all
   end
@@ -36,12 +39,7 @@ class EventsController < ApplicationController
   
   private
   
-  def authorize_hr
-    token = request.headers['Authorization'].to_s.split(' ').last
-    payload = decode(token)
-    render json: { error: 'Unauthorized' }, status: :unauthorized unless payload && payload['user_id'] == 'hr'
-  end
-  
+
   def event_params
     params.permit( :id, :name, :date )
   end

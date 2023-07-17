@@ -2,6 +2,8 @@ class LeavesController < ApplicationController
 	skip_before_action :authenticate_request
 	before_action :authorize_hr
 	before_action :set_params, only: [:show, :update]
+
+  # HR working regarding Leave for Approve
   
   def index
     render json: Leave.all
@@ -21,14 +23,8 @@ class LeavesController < ApplicationController
     
   private
 
-  def authorize_hr
-    token = request.headers['Authorization'].to_s.split(' ').last
-    payload = decode(token)
-    render json: { error: 'Unauthorized' }, status: :unauthorized unless payload && payload['user_id'] == 'hr'
-  end
-
   def leave_params
-    params.permit(  :reason, :status )
+    params.permit( :reason, :status )
   end
 
   def set_params

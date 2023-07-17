@@ -3,20 +3,11 @@ class EmployeesController < ApplicationController
   skip_before_action :authenticate_request
   before_action :authorize_hr
   before_action :set_params, only: [:show, :destroy, :update]
+
+  # HR Working regarding Employee
   
   def index
-    employees = User.all.map do |i|
-      {
-        user_id: i.id,
-        Fullname: i.fullname,
-        username: i.username,
-        Email: i.email,
-        joining_date: i.joining_date,
-        salary_alloted: i.salary_alloted,
-        profile_picture: i.profile_picture.url
-      }
-    end
-    render json: employees, status: :ok
+    render json: User.all
   end
 
   def show
@@ -48,15 +39,9 @@ class EmployeesController < ApplicationController
 
 
   private
-  
-  def authorize_hr
-    token = request.headers['Authorization'].to_s.split(' ').last
-    payload = decode(token)
-    render json: { error: 'Unauthorized' }, status: :unauthorized unless payload && payload['user_id'] == 'hr'
-  end
-  
+ 
   def employee_params
-    params.permit( :id, :fullname, :username, :password, :joining_date, :salary_alloted,  :email )
+    params.permit( :id, :fullname, :username, :password, :joining_date, :salary_alloted,  :email, :profile_picture, :type )
   end
 
   def set_params
