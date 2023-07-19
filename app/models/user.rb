@@ -9,4 +9,10 @@ class User < ApplicationRecord
   validates :salary_alloted, presence: true
   validates :joining_date, format: { with: /\A\d{4}-\d{2}-\d{2}\z/, message: "should be in the format yyyy-mm-dd" }
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "email", "fullname", "password_digest" ,"id", "joining_date", "salary_alloted", "type", "updated_at", "username"]
+  end
+   def self.ransackable_associations(auth_object = nil)
+    ["leaves", "profile_picture_attachment_id_eq"]
+  end
 end

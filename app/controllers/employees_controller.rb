@@ -1,5 +1,4 @@
-class EmployeesController < ApplicationController
-  include JsonWebToken
+class EmployeesController < NewController
   skip_before_action :authenticate_request
   before_action :authorize_hr
   before_action :set_params, only: [:show, :destroy, :update]
@@ -16,7 +15,6 @@ class EmployeesController < ApplicationController
   
   def create
     employee = User.new(employee_params)
-    employee.profile_picture.attach(params[:profile_picture])
     if employee.save
       render json: employee, status: :created
     else

@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < NewController
   before_action :authenticate_request, only: [:apply_leave, :leave_status, :show]
   before_action :authorize_employee, only: :apply_leave
   skip_before_action :authorize_hr

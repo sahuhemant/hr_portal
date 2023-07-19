@@ -1,5 +1,4 @@
-class HolidaysController < ApplicationController
-  include JsonWebToken
+class HolidaysController < NewController
   skip_before_action :authenticate_request
   before_action :authorize_hr, only: [:create, :destroy, :update]
   before_action :set_params, only: [:show, :destroy, :update]

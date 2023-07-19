@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   post '/login', to: 'authentications#login'
   post '/employees', to: 'employees#create'
   resources :employees, only: [:index, :create, :destroy, :update, :show]

@@ -1,5 +1,4 @@
-class EventsController < ApplicationController
-  include JsonWebToken
+class EventsController < NewController
   skip_before_action :authenticate_request
   before_action :authorize_hr, only: [:create, :destroy, :update]
   before_action :set_params, only: [:show, :destroy, :update]
@@ -18,7 +17,7 @@ class EventsController < ApplicationController
   def create
     event = Event.new(event_params)
     if event.save
-      render json: { message: 'Event created successfully' }
+      render json: event
     else
       render json: { error: event.errors.full_messages }, status: :unprocessable_entity
     end
@@ -26,7 +25,7 @@ class EventsController < ApplicationController
 
   def destroy
     @event.destroy
-    render json: { message: 'Event deleted successfully' }
+    render json: @event
   end
 
   def update

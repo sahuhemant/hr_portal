@@ -3,6 +3,10 @@ class Leave < ApplicationRecord
   validates  :reason, :start_date, :end_date, presence: true
   validate :validate_dates
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "end_date", "id", "reason", "start_date", "status", "updated_at", "user_id"]
+  end
+
   private
   
   def validate_dates
