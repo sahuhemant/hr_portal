@@ -1,4 +1,35 @@
 ActiveAdmin.register User do
+    index do
+    selectable_column
+    id_column
+    column :email
+    column :current_sign_in_at
+    column :sign_in_count
+    column :created_at
+    column :fullname
+    column :salary_alloted
+    column :joining_date
+    actions
+  end
+
+  filter :email
+  filter :current_sign_in_at
+  filter :sign_in_count
+  filter :created_at
+
+  form do |f|
+    f.inputs do
+      f.input :email
+      f.input :password_digest
+      f.input :fullname
+      f.input :username
+      f.input :salary_alloted
+      f.input :joining_date
+      f.input :type
+
+    end
+    f.actions
+  end
 
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

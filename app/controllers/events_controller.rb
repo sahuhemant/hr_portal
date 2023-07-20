@@ -17,7 +17,7 @@ class EventsController < NewController
   def create
     event = Event.new(event_params)
     if event.save
-      render json: event
+      render json: event, status: :created
     else
       render json: { error: event.errors.full_messages }, status: :unprocessable_entity
     end
