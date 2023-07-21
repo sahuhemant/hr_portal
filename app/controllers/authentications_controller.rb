@@ -7,12 +7,14 @@ class AuthenticationsController < NewController
   def login
     user = User.find_by(username: params[:username])
     
-    if user&.authenticate(params[:password])
+    if user.password == params[:password]
       token = encode(user_id: user.id, type: user.type)
       render json: { token: token, message: "#{user.type} login successful" }
     else
       render json: { error: 'Invalid name or password' }, status: :unauthorized
     end
+    rescue
+      render json: {message: "Invalid"}
   end
 end
 

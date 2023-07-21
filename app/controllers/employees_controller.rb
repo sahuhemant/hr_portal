@@ -1,16 +1,19 @@
 class EmployeesController < NewController
   skip_before_action :authenticate_request
   before_action :authorize_hr
-  before_action :set_params, only: [:show, :destroy, :update]
+  before_action :set_params, only: [ :destroy, :update ]
 
   # HR Working regarding Employee
   
-  def index
-    render json: User.all
-  end
+   def index
+    employee_name = params[:fullname] 
+    @employee = User.where(' fullname LIKE ?',"%#{employee_name}%")
 
-  def show
-    render json: @employee, status: :ok
+    if @employee.present?
+      render json: @employee, status: :ok
+    else
+      render json: { error: 'employee not found' }, status: :not_found
+    end
   end
   
   def create
@@ -24,7 +27,7 @@ class EmployeesController < NewController
 
   def destroy
     @employee.destroy
-    render json: { message: 'Employee deleted successfully' }
+    render json: @employee
   end
 
   def update
@@ -34,7 +37,6 @@ class EmployeesController < NewController
       render json: { errors: @employee.errors.full_messages }, status: :unprocessable_entity
     end
   end
-
 
   private
  

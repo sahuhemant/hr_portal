@@ -1,17 +1,20 @@
 class EventsController < NewController
   skip_before_action :authenticate_request
   before_action :authorize_hr, only: [:create, :destroy, :update]
-  before_action :set_params, only: [:show, :destroy, :update]
+  before_action :set_params, only: [:destroy, :update]
 
   # Hr Working 
 
 
-  def index
-    render json: Event.all
-  end
+   def index
+    event_name = params[:name] 
+    @event = Event.where(' name LIKE ?',"%#{event_name}%")
 
-  def show
-    render json: @event, status: :ok
+    if @event.present?
+      render json: @event, status: :ok
+    else
+      render json: { error: 'event not found' }, status: :not_found
+    end
   end
   
   def create

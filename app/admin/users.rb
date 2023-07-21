@@ -20,7 +20,7 @@ ActiveAdmin.register User do
   form do |f|
     f.inputs do
       f.input :email
-      f.input :password_digest
+      f.input :password
       f.input :fullname
       f.input :username
       f.input :salary_alloted
